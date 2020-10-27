@@ -1,5 +1,6 @@
 package com.accenture.JavaQuestions.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class QuestionTest {
+@Table(name = "Question", schema = "java_quiz")
+public class Question {
     @Getter
     @Setter
     @Id
@@ -15,23 +17,18 @@ public class QuestionTest {
     private Long id;
     @Getter
     @Setter
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "questionTestId")
-    private Test test;
-    @Getter
-    @Setter
     private String question;
     @Getter
     @Setter
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "answerId")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
+    //@JsonManagedReference
     private List<Answer> answersList;
 
-    public QuestionTest(){
+    public Question(){
 
     }
-    public QuestionTest(Test test, String question){
-        this.test = test;
+    public Question(String question){
         this.question = question;
     }
+
 }

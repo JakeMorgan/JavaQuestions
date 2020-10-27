@@ -1,11 +1,13 @@
 package com.accenture.JavaQuestions.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Table(name = "Answer", schema = "java_quiz")
 public class Answer {
     @Getter
     @Setter
@@ -15,8 +17,9 @@ public class Answer {
     @Getter
     @Setter
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "questionTestId")
-    private QuestionTest questionTest;
+    @JoinColumn(name = "questionId")
+    //@JsonBackReference
+    private Question question;
     @Getter
     @Setter
     private String answerText;
@@ -27,8 +30,8 @@ public class Answer {
     public Answer(){
 
     }
-    public Answer(QuestionTest questionTest, String answerText, Boolean isCorrect){
-        this.questionTest = questionTest;
+    public Answer(Question question, String answerText, Boolean isCorrect){
+        this.question = question;
         this.answerText = answerText;
         this.isCorrect = isCorrect;
     }
