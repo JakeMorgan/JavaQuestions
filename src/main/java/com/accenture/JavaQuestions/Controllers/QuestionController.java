@@ -37,7 +37,7 @@ public class QuestionController {
     public Question editQuestion(@RequestBody Question question){
         return questionBusinessService.editQuestion(question);
     }
-    @DeleteMapping()
+    @DeleteMapping("{id}")
     public Boolean deleteQuestion(@PathVariable Long id){
         return  questionBusinessService.deleteQuestion(id);
     }
