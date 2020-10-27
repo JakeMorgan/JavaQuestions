@@ -68,7 +68,7 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
     }
 
     @Override
-    public Boolean deleteQuestion(Long id) {
+    public void deleteQuestion(Long id) {
         try {
             Optional<Question> question = questionRepository.findById(id);
             if(!question.isPresent()){
@@ -76,7 +76,6 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
             }
             answerRepository.deleteAll(question.get().getAnswersList());
             questionRepository.delete(question.get());
-            return true;
         }catch (DataAccessException ex){
             LOG.error(ex.getMessage());
             throw new RuntimeException("Delete question fail");
