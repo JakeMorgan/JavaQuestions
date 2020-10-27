@@ -28,4 +28,17 @@ public class QuestionController {
     public QuestionDTO getQuestion(@PathVariable Long id){
         return questionBusinessService.convert(questionBusinessService.getQuestion(id).orElseThrow(() -> new NotFoundException()));
     }
+
+    @PostMapping()
+    public Question createQuestion(@RequestBody Question question){
+        return questionBusinessService.createQuestion(question);
+    }
+    @PutMapping()
+    public Question editQuestion(@RequestBody Question question){
+        return questionBusinessService.editQuestion(question);
+    }
+    @DeleteMapping()
+    public Boolean deleteQuestion(@PathVariable Long id){
+        return  questionBusinessService.deleteQuestion(id);
+    }
 }

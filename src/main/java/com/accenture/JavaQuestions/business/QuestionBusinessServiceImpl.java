@@ -68,10 +68,14 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
     }
 
     @Override
-    public Boolean deleteQuestion(Question question) {
+    public Boolean deleteQuestion(Long id) {
         try {
-            answerRepository.deleteAll(question.getAnswersList());
-            questionRepository.delete(question);
+            Optional<Question> question = questionRepository.findById(id);
+            if(!question.isPresent()){
+                throw new RuntimeException("Delete question fail - Question does not exist");
+            }
+            answerRepository.deleteAll(question.get().getAnswersList());
+            questionRepository.delete(question.get());
             return true;
         }catch (DataAccessException ex){
             LOG.error(ex.getMessage());
