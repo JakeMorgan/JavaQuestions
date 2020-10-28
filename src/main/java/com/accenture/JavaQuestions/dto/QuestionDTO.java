@@ -13,14 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 public class QuestionDTO {
-    @Getter
-    @Setter
     private Long id;
-    @Getter
-    @Setter
     private String question;
-    @Getter
-    @Setter
     private List<AnswerDTO> answersList = new ArrayList<>();
 
     public QuestionDTO(Long id, String question){

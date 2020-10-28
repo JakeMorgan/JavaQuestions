@@ -9,14 +9,10 @@ import lombok.Setter;
 import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class AnswerDTO {
-    @Getter
-    @Setter
     private Long id;
-    @Getter
-    @Setter
     private String answerText;
-    @Getter
-    @Setter
     private Boolean isCorrect;
 }
