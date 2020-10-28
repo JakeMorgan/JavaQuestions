@@ -3,6 +3,7 @@ package com.accenture.JavaQuestions.business;
 import com.accenture.JavaQuestions.access.AnswerRepository;
 import com.accenture.JavaQuestions.access.QuestionRepository;
 import com.accenture.JavaQuestions.dto.AnswerDTO;
+import com.accenture.JavaQuestions.dto.PageQuestionDTO;
 import com.accenture.JavaQuestions.dto.QuestionDTO;
 import com.accenture.JavaQuestions.entity.Answer;
 import com.accenture.JavaQuestions.entity.Question;
@@ -106,13 +107,24 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
         return questionDTO;
     }
 
-    public Page<QuestionDTO> convertList(Page<Question> questionList){
-        Page<QuestionDTO> questionDTOList = questionList.map(new Function<Question, QuestionDTO>(){
+    public PageQuestionDTO convertList(Page<Question> questionList){
+        Page<QuestionDTO> questionDTOPage = questionList.map(new Function<Question, QuestionDTO>(){
             @Override
             public QuestionDTO apply(Question question) {
                 return convert(question);
             }
         });
-        return questionDTOList;
+        PageQuestionDTO.Pageable pageable = new PageQuestionDTO.Pageable(questionDTOPage.getTotalPages(),
+                questionDTOPage.getTotalElements(), questionDTOPage.getNumber());
+        return new PageQuestionDTO(questionDTOPage.getContent(), pageable);
+    }
+
+    public PageQuestionDTO convertToPageQuestionDTO(Page<QuestionDTO> questionDTOPage){
+        PageQuestionDTO pageQuestionDTO = new PageQuestionDTO();
+        pageQuestionDTO.setQuestionDTOList(questionDTOPage.getContent());
+        PageQuestionDTO.Pageable pageable = new PageQuestionDTO.Pageable(questionDTOPage.getTotalPages(),
+                questionDTOPage.getTotalElements(), questionDTOPage.getNumber());
+        pageQuestionDTO.setPageable(pageable);
+        return pageQuestionDTO;
     }
 }

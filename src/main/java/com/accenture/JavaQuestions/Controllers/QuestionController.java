@@ -3,6 +3,7 @@ package com.accenture.JavaQuestions.Controllers;
 import com.accenture.JavaQuestions.business.QuestionBusinessService;
 import com.accenture.JavaQuestions.business.QuestionBusinessServiceImpl;
 import com.accenture.JavaQuestions.dto.AnswerDTO;
+import com.accenture.JavaQuestions.dto.PageQuestionDTO;
 import com.accenture.JavaQuestions.dto.QuestionDTO;
 import com.accenture.JavaQuestions.entity.Answer;
 import com.accenture.JavaQuestions.entity.Question;
@@ -25,7 +26,7 @@ public class QuestionController {
     private QuestionBusinessServiceImpl questionBusinessService;
 
     @GetMapping()
-    public Page<QuestionDTO> questionList(
+    public PageQuestionDTO questionList(
             @RequestParam(required = false, defaultValue = "") String filter,
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable
             ){
