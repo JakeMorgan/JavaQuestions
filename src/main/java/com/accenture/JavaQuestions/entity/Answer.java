@@ -17,7 +17,6 @@ public class Answer {
     private Long id;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "questionId")
-    //@JsonBackReference
     private Question question;
     private String answerText;
     private Boolean isCorrect;
