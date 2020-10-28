@@ -10,6 +10,10 @@ import com.accenture.JavaQuestions.exceptions.NotFoundException;
 import com.accenture.JavaQuestions.mappers.AnswerMapper;
 import com.accenture.JavaQuestions.mappers.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +25,15 @@ public class QuestionController {
     private QuestionBusinessServiceImpl questionBusinessService;
 
     @GetMapping()
-    public List<QuestionDTO> questionList(){
-        return questionBusinessService.convertList(questionBusinessService.getQuestionsList());
+    public Page<QuestionDTO> questionList(
+            @RequestParam(required = false, defaultValue = "") String filter,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable
+            ){
+        if(filter !=null && !filter.isEmpty()){
+            return questionBusinessService.convertList(questionBusinessService.getQuestionsListByFilter(filter, pageable));
+        }else{
+            return questionBusinessService.convertList(questionBusinessService.getQuestionsList(pageable));
+        }
     }
     @GetMapping("{id}")
     public QuestionDTO getQuestion(@PathVariable Long id){

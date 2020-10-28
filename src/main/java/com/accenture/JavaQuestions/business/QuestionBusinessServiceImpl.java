@@ -12,13 +12,17 @@ import com.accenture.JavaQuestions.mappers.QuestionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Converter;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Component
 public class QuestionBusinessServiceImpl implements QuestionBusinessService{
@@ -83,12 +87,16 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
     }
 
     @Override
-    public List<Question> getQuestionsList() {
-        return (List<Question>) questionRepository.findAll();
+    public Page<Question> getQuestionsList(Pageable pageable) {
+        return (Page<Question>) questionRepository.findAll(pageable);
     }
     @Override
     public Optional<Question> getQuestion(Long id){
         return questionRepository.findById(id);
+    }
+    @Override
+    public Page<Question> getQuestionsListByFilter(String filter, Pageable pageable){
+        return (Page<Question>) questionRepository.findByQuestionContainingIgnoreCase(filter, pageable);
     }
 
     public QuestionDTO convert(Question question){
@@ -98,11 +106,13 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
         return questionDTO;
     }
 
-    public List<QuestionDTO> convertList(List<Question> questionList){
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
-        for(Question question:questionList){
-            questionDTOList.add(convert(question));
-        }
+    public Page<QuestionDTO> convertList(Page<Question> questionList){
+        Page<QuestionDTO> questionDTOList = questionList.map(new Function<Question, QuestionDTO>(){
+            @Override
+            public QuestionDTO apply(Question question) {
+                return convert(question);
+            }
+        });
         return questionDTOList;
     }
 }
