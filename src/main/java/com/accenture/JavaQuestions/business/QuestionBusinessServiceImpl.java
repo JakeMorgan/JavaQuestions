@@ -114,8 +114,8 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
                 return convert(question);
             }
         });
-        PageQuestionDTO.Pageable pageable = new PageQuestionDTO.Pageable(questionDTOPage.getTotalPages(),
-                questionDTOPage.getTotalElements(), questionDTOPage.getNumber());
-        return new PageQuestionDTO(questionDTOPage.getContent(), pageable);
+        return new PageQuestionDTO(questionDTOPage.getContent(),
+                new PageQuestionDTO.Pageable(questionDTOPage.getTotalPages(),
+                        questionDTOPage.getTotalElements(), questionDTOPage.getNumber()));
     }
 }
