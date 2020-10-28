@@ -18,7 +18,6 @@ public class Question {
     private Long id;
     private String question;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
-    //@JsonManagedReference
     private List<Answer> answersList;
 
     public Question(String question){

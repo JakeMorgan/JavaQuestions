@@ -2,12 +2,10 @@ package com.accenture.JavaQuestions.business;
 
 import com.accenture.JavaQuestions.dto.PageQuestionDTO;
 import com.accenture.JavaQuestions.dto.QuestionDTO;
-import com.accenture.JavaQuestions.entity.Answer;
 import com.accenture.JavaQuestions.entity.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface QuestionBusinessService {

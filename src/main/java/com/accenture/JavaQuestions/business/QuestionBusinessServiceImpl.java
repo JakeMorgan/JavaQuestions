@@ -28,6 +28,10 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
     private QuestionRepository questionRepository;
     @Autowired
     private AnswerRepository answerRepository;
+
+    public QuestionBusinessServiceImpl() {
+    }
+
     @Override
     @Transactional
     public Question createQuestion(Question question) {
