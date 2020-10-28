@@ -45,7 +45,7 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
             answerRepository.saveAll(answerList);
             return question;
         }catch (DataAccessException ex) {
-            //LOG.error(ex.getMessage());
+            LOG.error(ex.getMessage());
             throw new RuntimeException("Create question fail");
         }
     }
