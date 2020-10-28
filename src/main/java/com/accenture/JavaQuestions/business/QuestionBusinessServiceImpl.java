@@ -7,23 +7,19 @@ import com.accenture.JavaQuestions.dto.PageQuestionDTO;
 import com.accenture.JavaQuestions.dto.QuestionDTO;
 import com.accenture.JavaQuestions.entity.Answer;
 import com.accenture.JavaQuestions.entity.Question;
-import com.accenture.JavaQuestions.exceptions.NotFoundException;
 import com.accenture.JavaQuestions.mappers.AnswerMapper;
 import com.accenture.JavaQuestions.mappers.QuestionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Converter;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Component
 public class QuestionBusinessServiceImpl implements QuestionBusinessService{
@@ -89,7 +85,7 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
 
     @Override
     public Page<Question> getQuestionsList(Pageable pageable) {
-        return (Page<Question>) questionRepository.findAll(pageable);
+        return questionRepository.findAll(pageable);
     }
     @Override
     public Optional<Question> getQuestion(Long id){
@@ -97,23 +93,18 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
     }
     @Override
     public Page<Question> getQuestionsListByFilter(String filter, Pageable pageable){
-        return (Page<Question>) questionRepository.findByQuestionContainingIgnoreCase(filter, pageable);
+        return questionRepository.findByQuestionContainingIgnoreCase(filter, pageable);
     }
-
+    @Override
     public QuestionDTO convert(Question question){
         QuestionDTO questionDTO = QuestionMapper.INSTANCE.toDTO(question);
         List<AnswerDTO> answerDTOList = AnswerMapper.INSTANCE.toAnswerDTOList(question.getAnswersList());
         questionDTO.setAnswersList(answerDTOList);
         return questionDTO;
     }
-
+    @Override
     public PageQuestionDTO convertList(Page<Question> questionList){
-        Page<QuestionDTO> questionDTOPage = questionList.map(new Function<Question, QuestionDTO>(){
-            @Override
-            public QuestionDTO apply(Question question) {
-                return convert(question);
-            }
-        });
+        Page<QuestionDTO> questionDTOPage = questionList.map(this::convert);
         return new PageQuestionDTO(questionDTOPage.getContent(),
                 new PageQuestionDTO.Pageable(questionDTOPage.getTotalPages(),
                         questionDTOPage.getTotalElements(), questionDTOPage.getNumber()));

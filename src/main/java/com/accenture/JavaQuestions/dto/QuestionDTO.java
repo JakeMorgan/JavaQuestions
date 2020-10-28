@@ -1,8 +1,5 @@
 package com.accenture.JavaQuestions.dto;
 
-import com.accenture.JavaQuestions.entity.Answer;
-import com.accenture.JavaQuestions.mappers.AnswerMapper;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
