@@ -2,11 +2,10 @@ package com.accenture.JavaQuestions.business;
 
 import com.accenture.JavaQuestions.access.AnswerRepository;
 import com.accenture.JavaQuestions.access.QuestionRepository;
-import com.accenture.JavaQuestions.dto.AnswerDTO;
-import com.accenture.JavaQuestions.dto.PageQuestionDTO;
-import com.accenture.JavaQuestions.dto.QuestionDTO;
+import com.accenture.JavaQuestions.dto.*;
 import com.accenture.JavaQuestions.entity.Answer;
 import com.accenture.JavaQuestions.entity.Question;
+import com.accenture.JavaQuestions.entity.Test;
 import com.accenture.JavaQuestions.mappers.AnswerMapper;
 import com.accenture.JavaQuestions.mappers.QuestionMapper;
 import org.slf4j.Logger;
@@ -35,6 +34,10 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
     @Override
     @Transactional
     public Question createQuestion(Question question) {
+        Optional<Question> checkQuestion = questionRepository.findByQuestion(question.getQuestion());
+        if(checkQuestion.isPresent()){
+            throw new RuntimeException("The question already exists");
+        }
         try {
             List<Answer> answerList = question.getAnswersList();
             question.setAnswersList(null);
@@ -107,10 +110,22 @@ public class QuestionBusinessServiceImpl implements QuestionBusinessService{
         return questionDTO;
     }
     @Override
-    public PageQuestionDTO convertList(Page<Question> questionList){
+    public PageDTO convertList(Page<Question> questionList){
         Page<QuestionDTO> questionDTOPage = questionList.map(this::convert);
-        return new PageQuestionDTO(questionDTOPage.getContent(),
-                new PageQuestionDTO.Pageable(questionDTOPage.getTotalPages(),
+        return new PageDTO(questionDTOPage.getContent(),
+                new PageableDTO(questionDTOPage.getTotalPages(),
                         questionDTOPage.getTotalElements(), questionDTOPage.getNumber()));
+    }
+
+    public PageDTO result(String filter, Pageable pageable){
+        if(filter !=null && !filter.isEmpty()){
+            return convertList(getQuestionsListByFilter(filter, pageable));
+        }else{
+            return convertList(getQuestionsList(pageable));
+        }
+    }
+
+    public Question testSaveQuestion(Question questionEdit){
+        return questionRepository.save(questionEdit);
     }
 }

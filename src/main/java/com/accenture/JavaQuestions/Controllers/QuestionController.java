@@ -1,7 +1,7 @@
 package com.accenture.JavaQuestions.Controllers;
 
 import com.accenture.JavaQuestions.business.QuestionBusinessService;
-import com.accenture.JavaQuestions.dto.PageQuestionDTO;
+import com.accenture.JavaQuestions.dto.PageDTO;
 import com.accenture.JavaQuestions.dto.QuestionDTO;
 import com.accenture.JavaQuestions.entity.Question;
 import com.accenture.JavaQuestions.exceptions.NotFoundException;
@@ -19,15 +19,11 @@ public class QuestionController {
     private QuestionBusinessService questionBusinessService;
 
     @GetMapping()
-    public PageQuestionDTO questionList(
+    public PageDTO questionList(
             @RequestParam(required = false, defaultValue = "") String filter,
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable
             ){
-        if(filter !=null && !filter.isEmpty()){
-            return questionBusinessService.convertList(questionBusinessService.getQuestionsListByFilter(filter, pageable));
-        }else{
-            return questionBusinessService.convertList(questionBusinessService.getQuestionsList(pageable));
-        }
+        return questionBusinessService.result(filter, pageable);
     }
     @GetMapping("{id}")
     public QuestionDTO getQuestion(@PathVariable Long id){
