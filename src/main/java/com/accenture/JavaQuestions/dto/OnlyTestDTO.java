@@ -8,7 +8,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ListTestDTO {
+public class OnlyTestDTO {
     private Long id;
     private String name;
 }

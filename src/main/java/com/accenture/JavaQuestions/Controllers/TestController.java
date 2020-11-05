@@ -36,7 +36,7 @@ public class TestController {
         return testBusinessService.createTest(test);
     }
     @PostMapping("{id}")
-    public Test addQuestion(@PathVariable Long id, @RequestBody Question question){
+    public TestDTO addQuestion(@PathVariable Long id, @RequestBody Question question){
         return testBusinessService.addQuestion(id, question);
     }
     @PutMapping()

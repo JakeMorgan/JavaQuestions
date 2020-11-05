@@ -1,7 +1,5 @@
 package com.accenture.JavaQuestions.business;
 
-import com.accenture.JavaQuestions.access.AnswerRepository;
-import com.accenture.JavaQuestions.access.QuestionRepository;
 import com.accenture.JavaQuestions.access.TestRepository;
 import com.accenture.JavaQuestions.dto.*;
 import com.accenture.JavaQuestions.entity.Question;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class TestBusinessServiceImpl implements TestBusinessService{
@@ -61,12 +58,12 @@ public class TestBusinessServiceImpl implements TestBusinessService{
     }
 
     //////////////////////////////////////LIST DTO IGNORE QUESTIONLIST////////////////////////
-    public ListTestDTO convertTOListTestDTO(Test test) {
+    public OnlyTestDTO convertTOListTestDTO(Test test) {
         return TestMapper.INSTANCE.toListTestDTO(test);
     }
 
     public PageDTO convertListTestDTOToPageDTO(Page<Test> testList){
-        Page<ListTestDTO> listTestDTOPage = testList.map(this::convertTOListTestDTO);
+        Page<OnlyTestDTO> listTestDTOPage = testList.map(this::convertTOListTestDTO);
         return new PageDTO(listTestDTOPage.getContent(),
                 new PageableDTO(listTestDTOPage.getTotalPages(),
                         listTestDTOPage.getTotalElements(), listTestDTOPage.getNumber()));
@@ -80,7 +77,7 @@ public class TestBusinessServiceImpl implements TestBusinessService{
         }
     }
 
-    public Test addQuestion(Long id, Question question){
+    public TestDTO addQuestion(Long id, Question question){
         Optional<Test> test = testRepository.findById(id);
         if(!test.isPresent()){
             throw new RuntimeException("Add Question fail - Test does not exist");
@@ -106,18 +103,31 @@ public class TestBusinessServiceImpl implements TestBusinessService{
         testList.add(test.get());
         questionEdit.get().setTestList(testList);
         questionBusinessService.testSaveQuestion(questionEdit.get());
+        questions.add(questionEdit.get());
         test.get().setQuestionList(new ArrayList<>(questions));
-        return testRepository.save(test.get());
+        testRepository.save(test.get());
+        return convert(test.get());
     }
 
     public Test deleteQuestion(Long id, Question question){
         Optional<Test> test = testRepository.findById(id);
+        Optional<Question> questionEdit = questionBusinessService.getQuestion(question.getId());
+
         if(!test.isPresent()){
-            throw new RuntimeException("Add Question fail - Test does not exist");
+            throw new RuntimeException("Delete Question fail - Test does not exist");
         }
-        HashSet<Question> questions = (HashSet<Question>) test.get().getQuestionList();
-        questions.remove(question);
-        test.get().setQuestionList(new ArrayList<>(questions));
+        if(test.get().getQuestionList() == null){
+            throw new RuntimeException("Delete Question fail - the test has no questions");
+        }
+        Set<Test> questions = new HashSet<>(questionEdit.get().getTestList());
+        questions.remove(test.get());
+        questionEdit.get().setTestList(new ArrayList<>(questions));
+        questionBusinessService.testSaveQuestion(questionEdit.get());
+
+        Set<Question> testQuestions = new HashSet<>(test.get().getQuestionList());
+        testQuestions.remove(questionEdit.get());
+        test.get().setQuestionList(new ArrayList<>(testQuestions));
+
         return testRepository.save(test.get());
     }
 }
