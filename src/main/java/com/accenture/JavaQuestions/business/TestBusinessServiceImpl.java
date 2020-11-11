@@ -85,13 +85,10 @@ public class TestBusinessServiceImpl implements TestBusinessService{
         ////////////////////////////TEST///////////////////////
         test.get().load();
         List<Question> questionList = test.get().getQuestionList();
-        Set<Question> questions = new HashSet<>();
-        for(Question question1: questionList){
-            questions.add(question1);
-        }
+        Set<Question> questions = new HashSet<>(questionList);
         ///////////////////////////Question/////////////////////
         Optional<Question> questionEdit = questionBusinessService.getQuestion(question.getId());
-        if(!test.isPresent()){
+        if(!questionEdit.isPresent()){
             throw new RuntimeException("Add Question fail - Question does not exist");
         }
         List<Test> testList;
@@ -112,11 +109,13 @@ public class TestBusinessServiceImpl implements TestBusinessService{
     public Test deleteQuestion(Long id, Question question){
         Optional<Test> test = testRepository.findById(id);
         Optional<Question> questionEdit = questionBusinessService.getQuestion(question.getId());
-
-        if(!test.isPresent()){
+        if(!questionEdit.isPresent()){
+            throw new RuntimeException("Delete Question fail - Question does not exist");
+        }
+        else if(!test.isPresent()){
             throw new RuntimeException("Delete Question fail - Test does not exist");
         }
-        if(test.get().getQuestionList() == null){
+        else if(test.get().getQuestionList() == null){
             throw new RuntimeException("Delete Question fail - the test has no questions");
         }
         Set<Test> questions = new HashSet<>(questionEdit.get().getTestList());

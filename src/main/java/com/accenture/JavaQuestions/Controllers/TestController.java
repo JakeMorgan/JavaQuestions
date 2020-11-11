@@ -1,10 +1,13 @@
 package com.accenture.JavaQuestions.Controllers;
 
+import com.accenture.JavaQuestions.business.CompletedTestBusinessService;
 import com.accenture.JavaQuestions.business.TestBusinessService;
 import com.accenture.JavaQuestions.dto.PageDTO;
 import com.accenture.JavaQuestions.dto.TestDTO;
+import com.accenture.JavaQuestions.entity.CompletedTest;
 import com.accenture.JavaQuestions.entity.Question;
 import com.accenture.JavaQuestions.entity.Test;
+import com.accenture.JavaQuestions.entity.User;
 import com.accenture.JavaQuestions.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +22,8 @@ import java.util.Set;
 public class TestController {
     @Autowired
     private TestBusinessService testBusinessService;
+    @Autowired
+    private CompletedTestBusinessService completedTestBusinessService;
     @GetMapping()
     public PageDTO getTests(
             @RequestParam(required = false, defaultValue = "", name = "filter") String filter,
@@ -38,6 +43,10 @@ public class TestController {
     @PostMapping("{id}")
     public TestDTO addQuestion(@PathVariable Long id, @RequestBody Question question){
         return testBusinessService.addQuestion(id, question);
+    }
+    @PostMapping("{id}/completed")
+    public CompletedTest completedTest(@RequestBody CompletedTest completedTest){
+        return completedTestBusinessService.create(completedTest);
     }
     @PutMapping()
     public Test editTest(@RequestBody Test test){

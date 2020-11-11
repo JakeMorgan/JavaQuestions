@@ -5,7 +5,6 @@ import com.accenture.JavaQuestions.access.QuestionRepository;
 import com.accenture.JavaQuestions.dto.*;
 import com.accenture.JavaQuestions.entity.Answer;
 import com.accenture.JavaQuestions.entity.Question;
-import com.accenture.JavaQuestions.entity.Test;
 import com.accenture.JavaQuestions.mappers.AnswerMapper;
 import com.accenture.JavaQuestions.mappers.QuestionMapper;
 import org.slf4j.Logger;
